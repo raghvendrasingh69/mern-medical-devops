@@ -47,5 +47,11 @@ jobs:
             docker rm medical-backend || true
             docker rm medical-frontend || true
 
-            docker run -d -p 5000:5000 --name medical-backend ${{ secrets.DOCKER_USERNAME }}/medical-backend
-            docker run -d -p 80:80 --name medical-frontend ${{ secrets.DOCKER_USERNAME }}/medical-frontend
+            docker run -d -p 5000:5000 --name medical-backend \
+              -e MONGO_URI="${{ secrets.MONGO_URI }}" \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e PORT=5000 \
+              ${{ secrets.DOCKER_USERNAME }}/medical-backend
+
+            docker run -d -p 80:80 --name medical-frontend \
+              ${{ secrets.DOCKER_USERNAME }}/medical-frontend
